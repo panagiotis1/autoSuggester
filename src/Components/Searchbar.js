@@ -33,6 +33,7 @@ export default function Searchbar() {
         // } else {
         //     setFilteredData(newFilter)
         // }
+        
         setState((state) => ({...state, loading: true}))
         let url = new URL('https://hn.algolia.com/api/v1/search')
         url.searchParams.append("query", event.target.value)
