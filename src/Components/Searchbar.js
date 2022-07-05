@@ -34,11 +34,11 @@ export default function Searchbar() {
         //     setFilteredData(newFilter)
         // }
         setState((state) => ({...state, loading: true}))
-        let url = new URL ('https://hn.algolia.com/api/v1/search')
-        url.searchParams.append("query", "redux")
+        let url = new URL('https://hn.algolia.com/api/v1/search')
+        url.searchParams.append("query", event.target.value)
         axios.get(url)
             .then(results => {
-                setState({loading: false, hits: results.data})
+                setState({loading:false, hits:results.data})
             })
             .catch((error) => {
                 console.error(error);
