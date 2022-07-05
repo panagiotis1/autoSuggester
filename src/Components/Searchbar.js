@@ -5,42 +5,44 @@ import axios from 'axios'
 import SearchIcon from '@mui/icons-material/Search'
 
 export default function Searchbar() {
-    const [data, setData] = useState({ hits: [] })    
-    console.log(data)
-    console.log("RE-render")
-    // function loadActivity() {
-    //     fetch("https://jsonplaceholder.typicode.com/posts")
-    //         .then((response) => response.json())
-    //         .then((json) => {
-    //             console.log(json)
-    //             setData(json)
-    //         });
-    // }
+    const [state, setState] = useState({loading: false, hits: [] })
+    console.log("Render")
 
     useEffect(() => {
-        const fetchData = async () => {
-          const result = await axios(
-            'https://hn.algolia.com/api/v1/search?query=redux',
-          );
+        // const fetchData = async () => {
+        //   const result = await axios(
+        //     'https://hn.algolia.com/api/v1/search?query=redux',
+        //   );
     
-          setData(result.data);
-        };
+        //   setData(result.data);
+        // };
     
-        fetchData();
-      }, []);
+        // fetchData();
+        console.log(state)
+      }, [state]);
 
     const [filteredData, setFilteredData] = useState([])
 
     function HandleFilter(event) {
-        const searchTitle = event.target.value
-        const newFilter = data.hits.filter((value) => {
-            return value.title.toLowerCase().includes(searchTitle.toLowerCase())
-        })
-        if (searchTitle === "") {
-            setFilteredData([])
-        } else {
-            setFilteredData(newFilter)
-        }
+        // const searchTitle = event.target.value
+        // const newFilter = data.hits.filter((value) => {
+        //     return value.title.toLowerCase().includes(searchTitle.toLowerCase())
+        // })
+        // if (searchTitle === "") {
+        //     setFilteredData([])
+        // } else {
+        //     setFilteredData(newFilter)
+        // }
+        setState((state) => ({...state, loading: true}))
+        let url = new URL ('https://hn.algolia.com/api/v1/search')
+        url.searchParams.append("query", "redux")
+        axios.get(url)
+            .then(results => {
+                setState({loading: false, hits: results.data})
+            })
+            .catch((error) => {
+                console.error(error);
+            })
     }
 
     return (
@@ -64,6 +66,7 @@ export default function Searchbar() {
                     )}
                 </div>
             )}
+            {state.loading&&<div>Loading...</div>}
         </div>
     )
 }
